@@ -28,10 +28,13 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         // Lookup view for data population
         TextView tvName = convertView.findViewById(R.id.name_view);
         TextView tvToken = convertView.findViewById(R.id.token_view);
+        ClockView cvClock = convertView.findViewById(R.id.clock_view);
         // Populate the data into the template view using the data object
         if (device != null) {
             tvName.setText(device.getName());
-            tvToken.setText(device.generateOTP(System.currentTimeMillis()));
+            long now = System.currentTimeMillis();
+            tvToken.setText(device.generateOTP(now));
+            cvClock.setAngle((int)(360*device.getRemainingRatio(now)));
         } else {
             tvName.setText("");
             tvToken.setText("");

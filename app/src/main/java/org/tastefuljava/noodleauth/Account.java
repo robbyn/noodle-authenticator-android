@@ -56,6 +56,10 @@ public class Account {
         return generate(key, stime/validity, otpLength);
     }
 
+    public double getRemainingRatio(long time) {
+        return (time/1000.0%validity)/validity;
+    }
+
     public long getEndValidity(long time) {
         return (time/1000/validity + 1)*validity*1000;
     }
