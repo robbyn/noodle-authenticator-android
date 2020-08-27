@@ -2,7 +2,9 @@ package org.tastefuljava.noodleauth;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -65,7 +67,36 @@ public class MainActivity extends AppCompatActivity {
             assert acc != null;
             accountDlg(view, acc, (n, k, o, v) -> updateAccount(acc, n, k, o, v));
         });
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        Uri data = intent.getData();
+        if ("android.intent.action.VIEW".equals(action) && data != null) {
+            handleUri(data);
+        }
         handler.post(refresh);
+    }
+
+    private void handleUri(Uri uri) {
+        if ("otpauth".equals(uri.getScheme())
+            && "totp".equals(uri.getHost())) {
+            String name = uri.getPath();
+            if (name == null) {
+                name = "";
+            } else if (name.startsWith("/")) {
+                name = name.substring(1);
+            }
+            byte[] key = {};
+            String key32 = uri.getQueryParameter("secret");
+            if (key32 != null) {
+                key = Codec.BASE32.decode(key32);
+            }
+            String sotplen = uri.getQueryParameter("digits");
+            int otplen = sotplen == null ? 6 : Integer.parseInt(sotplen);
+            String svalidity = uri.getQueryParameter("period");
+            int validity = svalidity == null ? 30 : Integer.parseInt(svalidity);
+            Account acc = new Account(name, key, otplen, validity);
+            accountDlg(findViewById(android.R.id.content), acc, this::addAccount);
+        }
     }
 
     @SuppressLint("SetTextI18n")
