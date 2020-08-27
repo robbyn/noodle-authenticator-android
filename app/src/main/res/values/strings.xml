@@ -11,4 +11,19 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="name">Name</string>
     <string name="hometown">HomeTown</string>
+    <string name="prefs">noodleauth</string>
+    <string name="account_count">account.count</string>
+    <string name="account_prefix">account.</string>
+    <string name="account_name">.name</string>
+    <string name="account_key">.key</string>
+    <string name="account_otplength">.otpLength</string>
+    <string name="account_validity">.validity</string>
+    <string name="dlg_account_name">Account name</string>
+    <string name="dlg_account_otplength">OTP length</string>
+    <string name="dlg_account_validity">Validity</string>
+    <string name="dlg_default_validity">30</string>
+    <string name="dlg_default_otplength">6</string>
+    <string name="dlg_account_key">Key</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 </resources>
