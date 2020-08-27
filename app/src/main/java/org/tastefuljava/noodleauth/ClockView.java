@@ -8,7 +8,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class ClockView extends View {
-    private Paint paint;
+    private final Paint fill = initialFill();
+    private final Paint stroke = initialStroke();
     private int margin;
     private int angle;
 
@@ -47,8 +48,9 @@ public class ClockView extends View {
         int radius = Math.min(width, height)/2-margin;
         int x = width/2;
         int y = height/2;
+        canvas.drawCircle(x, y, radius, stroke);
         canvas.drawArc(x-radius, y-radius, x+radius, y+radius,
-                270, angle, true, paint);
+                270, angle-360, true, fill);
     }
 
     public int getAngle() {
@@ -61,14 +63,12 @@ public class ClockView extends View {
     }
 
     public int getColor() {
-        return paint.getColor();
+        return fill.getColor();
     }
 
     public void setColor(int color) {
-        paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setAntiAlias(true);
-        paint.setColor(color);
+        fill.setColor(color);
+        stroke.setColor(color);
         invalidate();
     }
 
@@ -79,5 +79,19 @@ public class ClockView extends View {
     public void setMargin(int margin) {
         this.margin = margin;
         invalidate();
+    }
+
+    private static Paint initialFill() {
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setAntiAlias(true);
+        return paint;
+    }
+    private static Paint initialStroke() {
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setAntiAlias(true);
+        paint.setStrokeWidth(1);
+        return paint;
     }
 }

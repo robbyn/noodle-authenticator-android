@@ -57,7 +57,7 @@ public class Account {
     }
 
     public double getRemainingRatio(long time) {
-        return (double)(time/1000/validity)/(double)validity;
+        return (double)(time/1000%validity)/(double)validity;
     }
 
     public long getEndValidity(long time) {

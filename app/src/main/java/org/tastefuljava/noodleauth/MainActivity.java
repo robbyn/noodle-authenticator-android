@@ -8,6 +8,9 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.Handler;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
@@ -15,8 +18,26 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     private ListView accountListView;
     private AccountListAdapter accountListAdapter;
+
+    private final Handler handler = new Handler();
+    private Runnable refresh = new Runnable() {
+        private long last = SystemClock.uptimeMillis();
+        private long period = 1000;
+
+        @Override
+        public void run() {
+            Log.i(TAG, "tic");
+            accountListAdapter.notifyDataSetChanged();
+            do {
+                last += period;
+            } while (last <= SystemClock.uptimeMillis());
+            handler.postAtTime(this, last);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         accountListView.setAdapter(accountListAdapter);
         accountListAdapter.add(new Account("Digit",
                 Codec.BASE32.decode("MNYUWY2PIVYHAVCB"), 6, 30));
+        handler.post(refresh);
     }
 
     @Override

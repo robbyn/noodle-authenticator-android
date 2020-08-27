@@ -38,6 +38,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         } else {
             tvName.setText("");
             tvToken.setText("");
+            cvClock.setAngle(0);
         }
         // Return the completed view to render on screen
         return convertView;
