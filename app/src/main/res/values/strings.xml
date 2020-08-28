@@ -26,4 +26,7 @@
     <string name="dlg_account_key">Key</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="mnu_edit">Edit</string>
+    <string name="mnu_duplicate">Duplicate</string>
+    <string name="mnu_delete">Delete</string>
 </resources>

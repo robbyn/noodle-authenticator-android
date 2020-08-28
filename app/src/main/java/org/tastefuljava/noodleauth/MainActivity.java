@@ -9,20 +9,25 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
 import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -67,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
             assert acc != null;
             accountDlg(view, acc, (n, k, o, v) -> updateAccount(acc, n, k, o, v));
         });
+        registerForContextMenu(accountListView);
         Intent intent = getIntent();
         String action = intent.getAction();
         Uri data = intent.getData();
@@ -103,12 +109,12 @@ public class MainActivity extends AppCompatActivity {
     private void accountDlg(View view, Account acc, AccountHandler handler) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         final View dlgView = getLayoutInflater().inflate(R.layout.account_dialog,null);
-        EditText txtName = (EditText)dlgView.findViewById(R.id.account_name);
-        EditText txtKey = (EditText)dlgView.findViewById(R.id.account_key);
-        EditText txtOtpLength = (EditText)dlgView.findViewById(R.id.account_otplength);
-        EditText txtValidity = (EditText)dlgView.findViewById(R.id.account_validity);
-        Button btnCancel = (Button)dlgView.findViewById(R.id.cancel);
-        Button btnOkay = (Button)dlgView.findViewById(R.id.ok);
+        EditText txtName = dlgView.findViewById(R.id.account_name);
+        EditText txtKey = dlgView.findViewById(R.id.account_key);
+        EditText txtOtpLength = dlgView.findViewById(R.id.account_otplength);
+        EditText txtValidity = dlgView.findViewById(R.id.account_validity);
+        Button btnCancel = dlgView.findViewById(R.id.cancel);
+        Button btnOkay = dlgView.findViewById(R.id.ok);
         if (acc != null) {
             txtName.setText(acc.getName());
             txtKey.setText(Codec.BASE32.encode(acc.getKey()));
@@ -231,5 +237,42 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
+        Account acc = (Account)accountListView.getItemAtPosition(info.position);
+        if (acc != null) {
+            menu.setHeaderTitle(acc.getName());
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        Account acc = (Account)accountListView.getItemAtPosition(info.position);
+        if (acc == null) {
+            return false;
+        }
+        switch (item.getItemId()) {
+            case R.id.edit:
+                accountDlg(accountListView, acc,
+                        (n, k, o, v) -> updateAccount(acc, n, k, o, v));
+                break;
+            case R.id.duplicate:
+                accountDlg(accountListView, acc, this::addAccount);
+                break;
+            case R.id.delete:
+                accountListAdapter.remove(acc);
+                writeState();
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 }
