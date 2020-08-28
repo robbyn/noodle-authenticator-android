@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleUri(Uri uri) {
         if ("otpauth".equals(uri.getScheme())
-            && "totp".equals(uri.getHost())) {
+                && "totp".equals(uri.getHost())) {
             String name = uri.getPath();
             if (name == null) {
                 name = "";
