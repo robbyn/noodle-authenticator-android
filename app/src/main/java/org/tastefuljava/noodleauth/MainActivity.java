@@ -2,6 +2,9 @@ package org.tastefuljava.noodleauth;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -270,6 +273,14 @@ public class MainActivity extends AppCompatActivity {
                 accountListAdapter.remove(acc);
                 writeState();
                 break;
+            case R.id.copy: {
+                ClipboardManager clipboard = (ClipboardManager)
+                        getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText(getString(R.string.token),
+                        acc.generateOTP(System.currentTimeMillis()));
+                clipboard.setPrimaryClip(clip);
+                break;
+            }
             default:
                 return false;
         }

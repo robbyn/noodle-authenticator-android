@@ -29,4 +29,7 @@
     <string name="mnu_edit">Edit</string>
     <string name="mnu_duplicate">Duplicate…</string>
     <string name="mnu_delete">Delete</string>
+    <string name="mnu_copy">Copy token</string>
+    <string name="token">Token</string>
+    <string name="default_token">123456</string>
 </resources>
