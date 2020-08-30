@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class AccountListAdapter extends ArrayAdapter<Account> {
     public AccountListAdapter(Activity activity) {
-        super(activity, 0, new ArrayList<Account>());
+        super(activity, 0, new ArrayList<>());
     }
 
     @Override
@@ -42,5 +42,13 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         }
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    public Account[] getAllItems() {
+        Account[] result = new Account[getCount()];
+        for (int i = 0; i < result.length; ++i) {
+            result[i] = getItem(i);
+        }
+        return result;
     }
 }

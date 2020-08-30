@@ -169,6 +169,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        writeState();
+    }
+
     private void readState() {
         SharedPreferences settings = getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         int count = settings.getInt(getString(R.string.account_count), 0);
@@ -191,18 +197,11 @@ public class MainActivity extends AppCompatActivity {
                 settings.getInt(pfx + i + getString(R.string.account_validity), 30));
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        writeState();
-    }
-
     private void writeState() {
         SharedPreferences settings = getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
         SharedPreferences.Editor edit = settings.edit();
         int count = 0;
-        for (int i = 0; i < accountListAdapter.getCount(); ++i) {
-            Account acc = accountListAdapter.getItem(i);
+        for (Account acc: accountListAdapter.getAllItems()) {
             if (acc != null) {
                 writeAccount(count, acc, edit);
                 edit.putInt(getString(R.string.account_count), ++count);
@@ -214,8 +213,7 @@ public class MainActivity extends AppCompatActivity {
     private void writeAccount(int i, Account acc, SharedPreferences.Editor edit) {
         String pfx = getString(R.string.account_prefix);
         edit.putString(pfx + i + getString(R.string.account_name), acc.getName());
-        edit.putString(pfx + i + getString(R.string.account_key),
-                Codec.BASE32.encode(acc.getKey()));
+        edit.putString(pfx + i + getString(R.string.account_key), Codec.BASE32.encode(acc.getKey()));
         edit.putInt(pfx + i + getString(R.string.account_otplength), acc.getOtpLength());
         edit.putInt(pfx + i + getString(R.string.account_validity), acc.getValidity());
     }
