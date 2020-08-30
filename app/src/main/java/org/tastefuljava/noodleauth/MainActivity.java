@@ -176,46 +176,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readState() {
-        SharedPreferences settings = getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
-        int count = settings.getInt(getString(R.string.account_count), 0);
+        State state = new State();
+        state.load(this);
         accountListAdapter.clear();
-        for (int i = 0; i < count; ++i) {
-            Account acc = readAccount(i, settings);
-            accountListAdapter.add(acc);
-        }
-    }
-
-    private Account readAccount(int i, SharedPreferences settings) {
-        String pfx = getString(R.string.account_prefix);
-        String name = settings.getString( pfx + i + getString(R.string.account_name), "");
-        assert name != null;
-        String key32 = settings.getString( pfx + i + getString(R.string.account_key), "");
-        assert key32 != null;
-        return new Account(name,
-                Codec.BASE32.decode(key32),
-                settings.getInt(pfx + i + getString(R.string.account_otplength), 6),
-                settings.getInt(pfx + i + getString(R.string.account_validity), 30));
+        accountListAdapter.addAll(state.getAccounts());
     }
 
     private void writeState() {
-        SharedPreferences settings = getSharedPreferences(getString(R.string.prefs), MODE_PRIVATE);
-        SharedPreferences.Editor edit = settings.edit();
-        int count = 0;
-        for (Account acc: accountListAdapter.getAllItems()) {
-            if (acc != null) {
-                writeAccount(count, acc, edit);
-                edit.putInt(getString(R.string.account_count), ++count);
-            }
-        }
-        edit.apply();
-    }
-
-    private void writeAccount(int i, Account acc, SharedPreferences.Editor edit) {
-        String pfx = getString(R.string.account_prefix);
-        edit.putString(pfx + i + getString(R.string.account_name), acc.getName());
-        edit.putString(pfx + i + getString(R.string.account_key), Codec.BASE32.encode(acc.getKey()));
-        edit.putInt(pfx + i + getString(R.string.account_otplength), acc.getOtpLength());
-        edit.putInt(pfx + i + getString(R.string.account_validity), acc.getValidity());
+        State state = new State();
+        state.setAccounts(accountListAdapter.getAllItems());
+        state.store(this);
     }
 
     @Override

@@ -26,5 +26,6 @@
     <string name="mnu_copy">Copy token</string>
     <string name="token">Token</string>
     <string name="default_token">Token</string>
-    <string name="about">Copyright © 2020 Maurice Perry</string>
+    <string name="about">Copyright © 2020 TastefulJava.org</string>
+    <string name="state_version">state.version</string>
 </resources>
