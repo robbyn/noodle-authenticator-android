@@ -164,8 +164,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         readState();
         if (accountListAdapter.isEmpty()) {
-            accountListAdapter.add(new Account("Digit",
-                    Codec.BASE32.decode("MNYUWY2PIVYHAVCB"), 6, 30));
+            accountListAdapter.add(new Account("Example",
+                    Codec.BASE32.decode("ABCDEF3425"), 6, 30));
         }
     }
 
