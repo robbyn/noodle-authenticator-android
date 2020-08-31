@@ -129,13 +129,26 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.setCanceledOnTouchOutside(false);
         btnCancel.setOnClickListener((v) -> alertDialog.dismiss());
         btnOkay.setOnClickListener((v) -> {
-             String name = txtName.getText().toString();
-            byte[] key = Codec.BASE32.decode(txtKey.getText().toString());
-            int otpLength = Integer.parseInt(txtOtpLength.getText().toString());
-            int validity = Integer.parseInt(txtValidity.getText().toString());
-            handler.apply(name, key, otpLength, validity);
+            try {
+                String name = txtName.getText().toString();
+                byte[] key = Codec.BASE32.decode(txtKey.getText().toString());
+                int otpLength = Integer.parseInt(txtOtpLength.getText().toString());
+                int validity = Integer.parseInt(txtValidity.getText().toString());
+                handler.apply(name, key, otpLength, validity);
+            } catch (Throwable ex) {
+                showError(getString(R.string.error), ex.getMessage());
+            }
             alertDialog.dismiss();
         });
+        alertDialog.show();
+    }
+
+    private void showError(String title, String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(message);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                (dialog, which) -> dialog.dismiss());
         alertDialog.show();
     }
 

@@ -70,7 +70,7 @@ public enum Codec {
             byte val;
             if (c <= 0 || c > 127 || (val = lookup[c]) < 0) {
                 throw new IllegalArgumentException(
-                        "Invalid digit: " + (int) c);
+                        "Invalid digit: " + c);
             }
             b <<= shift;
             b |= val & mask;
