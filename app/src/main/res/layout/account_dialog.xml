@@ -27,7 +27,7 @@
         android:id="@+id/account_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
         android:hint="@string/dlg_account_key"
         android:importantForAutofill="no"
         android:inputType="textNoSuggestions|textCapCharacters" />
