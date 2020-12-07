@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.os.Handler;
 import android.os.SystemClock;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -114,6 +115,11 @@ public class MainActivity extends AppCompatActivity {
         final View dlgView = getLayoutInflater().inflate(R.layout.account_dialog,null);
         EditText txtName = dlgView.findViewById(R.id.account_name);
         EditText txtKey = dlgView.findViewById(R.id.account_key);
+        InputFilter[] editFilters = txtKey.getFilters();
+        InputFilter[] newFilters = new InputFilter[editFilters.length + 1];
+        System.arraycopy(editFilters, 0, newFilters, 0, editFilters.length);
+        newFilters[editFilters.length] = new InputFilter.AllCaps();
+        txtKey.setFilters(newFilters);
         EditText txtOtpLength = dlgView.findViewById(R.id.account_otplength);
         EditText txtValidity = dlgView.findViewById(R.id.account_validity);
         Button btnCancel = dlgView.findViewById(R.id.cancel);
