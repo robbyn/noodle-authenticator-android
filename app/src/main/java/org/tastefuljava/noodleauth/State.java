@@ -3,10 +3,16 @@ package org.tastefuljava.noodleauth;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class State {
+    private static final String TAG = State.class.getSimpleName();
+
     public static final int CURRENT_VERSION = 0;
     private int version = CURRENT_VERSION;
     private Account[] accounts = {};
@@ -23,11 +29,15 @@ public class State {
         SharedPreferences settings = getSettings(context);
         version = settings.getInt(context.getString(R.string.state_version), 0);
         int count = settings.getInt(context.getString(R.string.account_count), 0);
-        Account[] newAccounts = new Account[count];
+        List<Account> newAccounts = new ArrayList<>();
         for (int i = 0; i < count; ++i) {
-            newAccounts[i] = readAccount(i, settings, context);
+            try {
+                newAccounts.add(readAccount(i, settings, context));
+            } catch (Throwable ex) {
+                Log.e(TAG, "Account " + i + " is unreadable.");
+            }
         }
-        accounts = newAccounts;
+        accounts = newAccounts.toArray(new Account[0]);
     }
 
     public void store(Context context) {
