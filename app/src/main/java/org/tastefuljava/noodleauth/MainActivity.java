@@ -137,7 +137,18 @@ public class MainActivity extends AppCompatActivity {
         btnOkay.setOnClickListener((v) -> {
             try {
                 String name = txtName.getText().toString();
-                byte[] key = Codec.BASE32.decode(txtKey.getText().toString());
+                if (isBlank(name)) {
+                    showError("Error", "Please enter a name for the account");
+                    txtName.requestFocus();
+                    return;
+                }
+                String keyStr = txtKey.getText().toString();
+                if (isBlank(keyStr)) {
+                    showError("Error", "Please enter a base32-encoded key");
+                    txtKey.requestFocus();
+                    return;
+                }
+                byte[] key = Codec.BASE32.decode(keyStr);
                 int otpLength = Integer.parseInt(txtOtpLength.getText().toString());
                 int validity = Integer.parseInt(txtValidity.getText().toString());
                 handler.apply(name, key, otpLength, validity);
@@ -266,5 +277,9 @@ public class MainActivity extends AppCompatActivity {
                 return false;
         }
         return true;
+    }
+
+    private static boolean isBlank(String s) {
+        return s == null || s.trim().length() == 0;
     }
 }
